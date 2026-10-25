@@ -1,0 +1,72 @@
+name: Build STILL APK
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.7'
+          channel: stable
+
+      - name: Prepare Android SDK
+        shell: bash
+        run: |
+          flutter config --no-analytics
+          set +o pipefail
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null
+          set -o pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+            "platforms;android-34" "platforms;android-35" "platforms;android-36" \
+            "build-tools;36.0.0" "ndk;28.2.13676358"
+
+      - name: Resolve dependencies
+        run: flutter pub get --enforce-lockfile
+
+      - name: Test HTML Android bridge
+        run: node test/native_bridge_test.cjs
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+      - name: Build installable test APK
+        run: |
+          chmod +x android/gradlew
+          flutter build apk --release
+
+      - name: Prepare download
+        run: |
+          mkdir -p apk
+          cp build/app/outputs/flutter-apk/app-release.apk apk/STILL-test.apk
+          cd apk
+          sha256sum STILL-test.apk > SHA256SUMS.txt
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v7
+        with:
+          name: STILL-Android-test
+          path: apk/
+          if-no-files-found: error
+          retention-days: 7

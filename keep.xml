@@ -1,0 +1,2 @@
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@raw/still_final_bowl,@raw/still_final_gong,@raw/still_final_triangle,@raw/still_final_temple_bell,@raw/still_final_chimes,@raw/still_final_crystal" />

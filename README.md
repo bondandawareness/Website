@@ -1,21 +1,34 @@
-# Bond & Awareness
+# STILL — versione finale Android
 
-Static showcase for the existing Etsy shop. No checkout or customer database is hosted here.
+Questa versione usa il file approvato STILL_spirale_finale_preview_fluida.html dentro una WebView locale. Grafica e animazione restano quelle del file finale. Non serve una connessione per aprire la grafica o ascoltare i suoni.
 
-## Update
+## Creare l'APK con GitHub
 
-- Edit `template.html` for page content and `styles.css` for styling.
-- Update `products.json` for product IDs, editorial titles, categories and descriptions. Each entry's last field records its source Etsy thumbnail path.
-- Product photos are stored locally in `assets/<listing-id>.jpg`.
-- Run `npm run build` (Node.js, no dependencies) to regenerate `index.html`. Commit both source and generated HTML.
-- `catalog.js` adds category filters and progressive display. Without JavaScript, all 22 products remain visible.
+1. Estrai lo ZIP sul computer.
+2. Apri https://github.com/stillnessfromdarkness/still e scegli Add file > Upload files.
+3. Carica il contenuto della cartella estratta (android, assets, lib, test, pubspec.yaml, pubspec.lock, analysis_options.yaml e README.md) nella radice del repository. Non caricare lo ZIP o una cartella esterna che racchiuda tutto. Conferma con Commit changes.
+4. La cartella nascosta .github contiene il workflow aggiornato. Puoi caricarla con Git oppure aprire su GitHub il workflow esistente e sostituirne il contenuto con quello del file .github/workflows incluso. Il workflow precedente compila comunque il progetto; quello aggiornato verifica anche il collegamento HTML–Android.
+5. Actions > Build STILL APK > Run workflow > main > Run workflow.
+6. Quando diventa verde, apri Summary > Artifacts > STILL-Android-test. Estrai STILL-test.apk e trasferiscilo al telefono.
 
-## Vercel
+Non occorre un nuovo workflow: puoi riutilizzare Build STILL APK.
 
-Import the GitHub repository using the Other framework preset. The included `vercel.json` builds the static page. Preserve the existing domain configuration. Deploy the redesign branch to a preview before merging into the production branch.
+## Cosa cambia
 
-## Content
+- HTML finale incluso nell'app e adattato allo schermo senza cornice della preview.
+- Orari, ritmo, suono, vibrazione, strumento fisso o rotazione salvati sul dispositivo.
+- I sei suoni delle notifiche provengono dallo stesso HTML finale.
+- Promemoria Android programmati anche quando la schermata dell'app non è aperta.
+- Animazione e ascolto si fermano quando l'app passa in secondo piano.
+- Indietro Android torna dalle impostazioni alla home.
+- Renew reminders nelle impostazioni rinnova la programmazione e ne mostra la scadenza.
 
-Catalog transcribed from the public Etsy shop on 2026-10-23. Product titles on this site are shortened editorial labels; the Etsy listing contains the full product details. Prices are intentionally left on Etsy, which is the source of truth for prices, availability, languages, policies and downloads. Catalog updates are manual.
+## Limiti da conoscere
 
-Original logo and social URLs retained from the existing site. Original shop link corrected to `https://www.etsy.com/shop/BondAndAwareness`.
+È una versione da provare sul telefono, non ancora una release verificata su dispositivo fisico. La coda attuale copre al massimo 64 promemoria entro 5 giorni; con intervalli brevi può durare meno. Riaprire STILL prima della scadenza visualizzata la rinnova. Android può ritardare le notifiche per risparmio energetico e modificarne il comportamento sonoro in base al volume e alle impostazioni del telefono. La modalità Forza arresto impedisce i promemoria fino alla riapertura.
+
+Gli APK di test sono firmati con una chiave di debug generata dal runner GitHub. Se Android rifiuta l'aggiornamento per firma diversa, occorre disinstallare la vecchia versione (perdendo le impostazioni) prima di installare questa. Per aggiornamenti stabili serve una chiave di firma permanente.
+
+Requisito: Android 7.0 (API 24) o successivo con Android System WebView funzionante.
+
+Il progetto conserva i vecchi componenti Flutter e i loro test come riferimento; la home attiva è lib/web_home.dart. Il disegno approvato è in assets/web/index.html; assets/web/native_bridge.js collega i controlli al codice Android. Nessun server remoto è necessario.
