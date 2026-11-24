@@ -1,0 +1,36 @@
+BOND & AWARENESS — GRAFICA E BLOG
+
+Sito: homepage, catalogo, schede prodotto, blog, articoli, chi siamo, contatti. Gli acquisti restano su Etsy.
+Menu responsive da tastiera, filtri e ricerca, etichette leggibili, grafica bianco/nero con accenti verdi e font Fjalla One/Jost.
+
+GESTIONE ARTICOLI
+Apri /editor (oppure /editor.html). Puoi scrivere, scegliere una foto della collezione, aggiungere/rimuovere sezioni, visualizzare l'anteprima, esportare e salvare localmente.
+Per salvare online, collega l'area riservata con la chiave configurata in Vercel.
+Salva online aggiorna content/posts.json su GitHub; l'integrazione Git di Vercel deve essere attiva per pubblicare il commit.
+Stato Bozza: non genera una pagina pubblica e non compare negli elenchi o nella sitemap.
+Stato Pubblicato: entra nel sito dopo il deploy. La conferma di salvataggio GitHub non equivale alla conferma di deploy.
+Le bozze sono comunque nei sorgenti di questo repository pubblico: non usarle per appunti riservati.
+Le modifiche concorrenti vengono bloccate: esporta una copia, ricollega il blog e riapplica le modifiche.
+
+CONFIGURAZIONE UNA TANTUM SU VERCEL
+Il codice non contiene credenziali e resta chiuso alla scrittura finché non vengono configurate:
+1. BLOG_ADMIN_KEY: chiave casuale di almeno 32 caratteri. Generala con un password manager e conservala: serve per accedere all'editor. Non inviarla in chat o nel repository.
+2. GITHUB_CONTENT_TOKEN: token GitHub fine-grained limitato al solo repository bondandawareness/Website, con Contents read/write. Inseriscilo solo nelle variabili riservate di Vercel; non appare nel browser.
+3. GITHUB_REPOSITORY=bondandawareness/Website e GITHUB_CONTENT_BRANCH=main.
+4. Output Directory=dist e Build Command=npm run build (già in vercel.json).
+5. Esegui un nuovo deploy dopo la configurazione. In un deploy di preview usa un branch editoriale separato, non main.
+Non occorre condividere o creare credenziali finché vuoi solo rivedere l'anteprima e il codice.
+
+COMANDI
+npm test
+npm run build
+npm run dev
+Anteprima: http://127.0.0.1:4180
+L'editor locale senza variabili attive mostra correttamente che la pubblicazione non è configurata.
+
+CONTENUTI INIZIALI
+I tre testi della bozza precedente restano come bozze nei sorgenti e non sono pubblicati. Il blog pubblico mostra un messaggio finché non pubblichi il primo articolo.
+
+VALIDAZIONE
+Test API: credenziali, richieste non autorizzate, validazione contenuti, conflitti e salvataggio.
+Controllo build: link, immagini, assenza delle bozze negli output pubblici.

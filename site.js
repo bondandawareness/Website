@@ -1,0 +1,10 @@
+document.documentElement.classList.add('js');
+const toggle=document.querySelector('.menu-toggle'),nav=document.querySelector('#primary-nav');
+function closeMenu(){nav?.classList.remove('is-open');toggle?.setAttribute('aria-expanded','false');}
+toggle?.addEventListener('click',()=>{const open=nav.classList.toggle('is-open');toggle.setAttribute('aria-expanded',String(open));});
+const current=location.pathname.replace(/\.html$/,'').replace(/\/$/,'')||'/';
+document.querySelectorAll('#primary-nav>a').forEach(a=>{if((new URL(a.href).pathname.replace(/\.html$/,'').replace(/\/$/,'')||'/')===current)a.setAttribute('aria-current','page');});
+const grid=document.querySelector('#product-grid');
+if(grid){const cards=[...grid.children].filter(c=>c.hasAttribute('data-category')),buttons=[...document.querySelectorAll('[data-filter]')],search=document.querySelector('#product-search'),status=document.querySelector('#result-count');let category=new URLSearchParams(location.search).get('category')||'All';if(!buttons.some(b=>b.dataset.filter===category))category='All';function update(){let n=0;for(const c of cards){const match=(category==='All'||c.dataset.category===category)&&c.textContent.toLowerCase().includes(search.value.toLowerCase().trim());c.hidden=!match;if(match)n++;}buttons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter===category)));status.textContent=n?`${n} results`:cards.length?'No results. Try another category or search.':'';}if(!cards.length){search.closest('label').hidden=true;document.querySelector('.filters').hidden=true;}buttons.forEach(b=>b.addEventListener('click',()=>{category=b.dataset.filter;update();}));search.addEventListener('input',update);update();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.nav-dropdown[open]').forEach(d=>{d.open=false;d.querySelector('summary').focus();});if(nav?.classList.contains('is-open')){closeMenu();toggle.focus();}}});
+document.addEventListener('click',e=>document.querySelectorAll('.nav-dropdown[open]').forEach(d=>{if(!d.contains(e.target))d.open=false;}));
